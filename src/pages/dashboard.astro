@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const eltoken = Astro.cookies.get("token");
+
+if (!eltoken) {
+  return Astro.redirect("/");
+}
+---
+
+<BaseLayout>
+  <nav class="bg-indigo-600 p-4 flex items-center justify-between">
+    <div>
+      <h1 class="text-white text-xl font-semibold">Dashboard</h1>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="text-white">Bienvenido</span>
+      <i class="fas fa-user-circle text-white text-2xl"></i>
+    </div>
+    <button
+      data-button-logout
+      class="flex justify-center rounded-md bg-indigo-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+    >
+      Logout
+    </button>
+  </nav>
+</BaseLayout>
+
+<script>
+  function deleteCookie(cookieName) {
+    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
+
+  const logoutbtn = document.querySelector("[data-button-logout]");
+  logoutbtn.addEventListener("click", () => {
+    deleteCookie("token");
+    window.location.href = "/";
+  });
+</script>
