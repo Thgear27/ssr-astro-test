@@ -17,16 +17,16 @@ if (!eltoken) {
       <span class="text-white">Bienvenido</span>
       <i class="fas fa-user-circle text-white text-2xl"></i>
     </div>
-    <button
-      data-button-logout
+    <a
+      href="/logout"
       class="flex justify-center rounded-md bg-indigo-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
     >
       Logout
-    </button>
+    </a>
   </nav>
 </BaseLayout>
 
-<script>
+<!-- <scripear>
   function deleteCookie(cookieName) {
     document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   }
@@ -36,4 +36,5 @@ if (!eltoken) {
     deleteCookie("token");
     window.location.href = "/";
   });
-</script>
+</scripear
+-->
