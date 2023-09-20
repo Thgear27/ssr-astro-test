@@ -1,13 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import "simple-notify/dist/simple-notify.min.css";
 ---
 
 <BaseLayout>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-        Registre su Cuenta
-      </h2>
+      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Registre su Cuenta</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -21,7 +20,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               type="email"
               autocomplete="email"
               required
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="p-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
@@ -37,7 +36,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               type="password"
               autocomplete="current-password"
               required
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="p-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
@@ -55,21 +54,61 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 </BaseLayout>
 
 <script>
+  import Notify from "simple-notify";
+
+  function pushNotify(status, title, message) {
+    new Notify({
+      status: status,
+      title: title,
+      text: message,
+      effect: "fade",
+      speed: 300,
+      customClass: null,
+      customIcon: null,
+      showIcon: true,
+      showCloseButton: true,
+      autoclose: true,
+      autotimeout: 3000,
+      gap: 20,
+      distance: 20,
+      type: 1,
+      position: "right top",
+    });
+  }
+
   const form = document.querySelector("[data-form-register]");
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(form as HTMLFormElement);
-    const response = await fetch("/api/register", {
-      method: "POST",
-      body: formData,
-    }).then((res)=> {
-      return res.json();
-    });
-   
-    // if (response.message !== "Error") {
-    //   window.location.href = "/dashboard";
-    // } else {
-    //   window.location.reload();
-    // }
+
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        body: formData,
+      }).then((res) => {
+        return res.json();
+      });
+
+      if (response.message === "success") {
+        console.log("User created successfully");
+        pushNotify("success", "Cuenta creada", "Se ha creado la cuenta correctamente");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3100);
+      } else {
+        console.log(response.error);
+        console.log(response.errorCode);
+
+        if (response.errorCode === "auth/email-already-exists") {
+          pushNotify("error", "Error", "Dirección de email ya registrada");
+        }
+        if (response.errorCode === "auth/invalid-email") {
+          pushNotify("error", "Error", "Dirección de email inválida");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   });
 </script>

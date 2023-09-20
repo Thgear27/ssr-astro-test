@@ -1,9 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const eltoken = Astro.cookies.get("token");
+const token = Astro.cookies.get("token");
 
-if (!eltoken) {
+if (!token) {
   return Astro.redirect("/");
 }
 ---
@@ -25,16 +25,3 @@ if (!eltoken) {
     </a>
   </nav>
 </BaseLayout>
-
-<!-- <scripear>
-  function deleteCookie(cookieName) {
-    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-  }
-
-  const logoutbtn = document.querySelector("[data-button-logout]");
-  logoutbtn.addEventListener("click", () => {
-    deleteCookie("token");
-    window.location.href = "/";
-  });
-</scripear
--->

@@ -38,7 +38,7 @@ if (eltoken) {
             <div class="text-sm">
               <a
                 href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
-                class="font-semibold text-indigo-600 hover:text-indigo-500">Olvidaste tu contraseña</a
+                class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">Olvidaste tu contraseña</a
               >
             </div>
           </div>
@@ -53,7 +53,7 @@ if (eltoken) {
             />
           </div>
         </div>
-
+        <a class="text-sm font-semibold text-indigo-600 hover:text-indigo-500" href="/register">Registrarse</a>
         <div>
           <button
             type="submit"
@@ -64,6 +64,7 @@ if (eltoken) {
       </form>
     </div>
   </div>
+
 </BaseLayout>
 
 <script>
@@ -73,9 +74,6 @@ if (eltoken) {
     const formData = new FormData(form as HTMLFormElement);
     const response = await fetch("/api/login", {
       method: "POST",
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
       body: formData,
     }).then((res)=> {
       return res.json();

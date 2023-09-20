@@ -1,4 +1,4 @@
-import { appAdmin } from "../../firebaseconfig";
+import { firebaseAdmin } from "../../firebaseconfig";
 import { getAuth } from "firebase-admin/auth";
 
 import type { APIRoute } from "astro";
@@ -8,27 +8,25 @@ export const POST: APIRoute = async ({ request }) => {
   const email = data.get("email") as string;
   const password = data.get("password") as string;
 
-  getAuth()
-    .createUser({
+  try {
+    const userRecord = await getAuth(firebaseAdmin).createUser({
       email: email,
       emailVerified: false,
       password: password,
-    })
-    .then((userRecord) => {
-      console.log("Successfully created new user:", userRecord.uid);
-    })
-    .catch((error) => {
-      console.log("Error creating new user:", error);
     });
 
-  console.log(appAdmin);
-
-  return new Response(
-    JSON.stringify({
-      message: "success",
-    }),
-    {
-      headers: { "Set-Cookie": `token=${"eltoken"}; Path=/` },
-    }
-  );
+    return new Response(
+      JSON.stringify({
+        message: "success",
+      })
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        message: "error",
+        error: error.message,
+        errorCode: error.code,
+      })
+    );
+  }
 };

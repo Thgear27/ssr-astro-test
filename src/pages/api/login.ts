@@ -1,3 +1,6 @@
+import { firebaseAdmin } from "../../firebaseconfig";
+import { getAuth } from "firebase-admin/auth";
+
 import type { APIRoute } from "astro";
 
 const userAdmin = {
