@@ -1,10 +1,25 @@
 ---
+import { firebaseAdmin } from "../firebaseconfig";
+
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const token = Astro.cookies.get("token");
+const sessionCookie = Astro.cookies.get("session");
+let shouldRedirect = false;
 
-if (!token) {
+if (!sessionCookie) {
   return Astro.redirect("/");
+} else {
+  await firebaseAdmin
+    .auth()
+    .verifySessionCookie(sessionCookie.value, true)
+    .catch(() => {
+      console.log("CHAMARE");
+      shouldRedirect = true;
+    });
+
+  if (shouldRedirect) {
+    return Astro.redirect("/logout");
+  }
 }
 ---
 

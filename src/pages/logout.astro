@@ -1,7 +1,7 @@
 ---
-const cookie = Astro.cookies.get("token");
+const cookie = Astro.cookies.get("session");
 if (cookie) {
-  Astro.cookies.set("token", "", { expires: new Date(0) });
+  Astro.cookies.set("session", "", { expires: new Date(0) });
 }
 return Astro.redirect("/");
 ---

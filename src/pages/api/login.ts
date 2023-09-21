@@ -3,17 +3,31 @@ import { getAuth } from "firebase-admin/auth";
 
 import type { APIRoute } from "astro";
 
-const userAdmin = {
-  email: "admin@admin.admin",
-  passoword: "1234",
-};
+const ONE_DAY = 60 * 60 * 24;
 
 export const POST: APIRoute = async ({ request }) => {
-  const data = await request.formData();
-  const email = data.get("email");
-  const password = data.get("password");
+  const expiresIn = ONE_DAY * 5 * 1000;
 
-  if (userAdmin.email !== email || userAdmin.passoword !== password) {
+  const body = await request.json();
+
+  try {
+    const sessionCookie = await firebaseAdmin.auth().createSessionCookie(body.idToken, { expiresIn: 60 * 5 * 1000 });
+
+    return new Response(
+      JSON.stringify({
+        message: "success",
+      }),
+      {
+        headers: {
+          "Set-Cookie": `session=${sessionCookie}; Path=/; HttpOnly; Secure; Max-Age=${expiresIn};`,
+        },
+
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.log(error);
+
     return new Response(
       JSON.stringify({
         message: "Error",
@@ -22,14 +36,14 @@ export const POST: APIRoute = async ({ request }) => {
         status: 400,
       }
     );
-  } else {
-    return new Response(
-      JSON.stringify({
-        message: "success",
-      }),
-      {
-        headers: { "Set-Cookie": `token=${"eltoken"}; Path=/` },
-      }
-    );
   }
+
+  return new Response(
+    JSON.stringify({
+      message: "Error",
+    }),
+    {
+      status: 400,
+    }
+  );
 };
